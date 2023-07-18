@@ -90,7 +90,7 @@ public class UserController : ControllerBase
         if(user is null) 
             return BadRequest("User not found");
         dbContext.Users.Remove(user);
-        
+
         dbContext.SaveChanges();
         return Ok();
     }
