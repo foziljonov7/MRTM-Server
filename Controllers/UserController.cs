@@ -43,6 +43,7 @@ public class UserController : ControllerBase
     {
         var userId = await dbContext.Users
             .Where(u => u.Id == id)
+            .Include(c => c.Courses)
             .FirstOrDefaultAsync();
 
         if(userId is null)
@@ -61,6 +62,7 @@ public class UserController : ControllerBase
 
         var users = await usersquary
             .Select(i => new GetUserDto(i))
+            .Include(c => c.Courses)
             .ToListAsync();
 
         return Ok(users);

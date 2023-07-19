@@ -37,6 +37,7 @@ public class TeacherController : ControllerBase
     {
         var teacherId = dbContext.Teachers
             .Where(t => t.Id == id)
+            .Include(c => c.Courses)
             .FirstOrDefault();
 
         if (teacherId is null)
