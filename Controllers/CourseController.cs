@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebApi.Data;
 using WebApi.Dtos;
 
@@ -16,7 +17,7 @@ public class CourseController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(CreateCourseDto createCourse)
     {
-        if(await dbContext.Courses.anyasync(c => c.Name.ToLower() == createCourse.Name.ToLower()))
+        if(await dbContext.Courses.AnyAsync(c => c.Name.ToLower() == createCourse.Name.ToLower()))
             return BadRequest("Course with this name already exists");
         
         var course = dbContext.Courses.Add(new Entities.Course
