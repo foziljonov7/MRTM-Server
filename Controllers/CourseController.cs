@@ -62,7 +62,7 @@ public class CourseController : ControllerBase
     {
         var course = await dbContext.Courses
             .FirstOrDefaultAsync(c => c.Id == id);
-        if(courseId is null)
+        if(course is null)
             return NotFound();
         if(await dbContext.Courses.AnyAsync(c => c.Name.ToLower() == updateCourse.Name.ToLower()))
             return BadRequest("Course with this name already exists");
