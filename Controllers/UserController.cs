@@ -19,11 +19,11 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateUser(CreateUserDto userDto)
+    public async Task<IActionResult> CreateUser(CreateUserDto userDto, GetCourseDto courseDto)
     {
         if(await dbContext.Users.AnyAsync(u => u.Username.ToLower() == userDto.Username.ToLower()))
             return Conflict("User with this username exists");
-        
+            
         var created = dbContext.Users.Add(new Entities.User
         {
             Id = Guid.NewGuid(),
