@@ -32,4 +32,58 @@ public class CourseController : ControllerBase
         await dbContext.SaveChangesAsync();
         return Ok(course.Entity.Id);
     }
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetCourse([FromRoute] Guid id)
+    {
+        var courseId = await dbContext.Courses
+            .Where(c => c.Id == id)
+            .FirstOrDefaultAsync();
+        if(courseId is null)
+            return NotFound();
+        return Ok(new GetCourseDto(courseId));
+    }
+    [HttpGet]
+    public async Task<IActionResult> GetCourses([FromQuery] string search)
+    {
+        var coursesearch = dbContext.Courses.AsQueryable();
+
+        if(!string.IsNullOrEmpty(search))
+            coursesearch = coursesearch.Where(c =>
+                c.Name.ToLower().Contains(search.ToLower()));
+        
+        var courses = await coursesearch
+            .Select(c => new GetCourseDto(c))
+            .ToListAsync();
+        
+        return Ok(courses);
+    }
+    [HttpPut]
+    public async Task<IActionResult> Update([FromBody] Guid id, UpdateCourseDto updateCourse)
+    {
+        var course = await dbContext.Courses
+            .FirstOrDefaultAsync(c => c.Id == id);
+        if(courseId is null)
+            return NotFound();
+        if(await dbContext.Courses.AnyAsync(c => c.Name.ToLower() == updateCourse.Name.ToLower()))
+            return BadRequest("Course with this name already exists");
+        
+        course.Name = updateCourse.Name;
+        course.price = updateCourse.Price;
+        course.Description = updateCourse.Description;
+        course.Davomiylik = updateCourse.Davomiylik;
+
+        await dbContext.SaveChangesAsync();
+        return Ok(course.Id);
+    }
+    [HttpDelete]
+    public async Task<IActionResult> Delete([FromBody] Guid id)
+    {
+        var course = await dbContext.Courses
+            .FirstOrDefaultAsync(c => c.Id == id);
+        if(course is null)
+            return NotFound();
+        
+        dbContext.Courses.Remove(course);
+        return Ok(course.Id);
+    }
 }
