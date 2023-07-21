@@ -12,7 +12,7 @@ public class UserController : ControllerBase
 {
     private readonly AppDbContext dbContext;
 
-    
+
     public UserController(AppDbContext dbContext)
     {
         this.dbContext = dbContext;
@@ -21,9 +21,9 @@ public class UserController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateUser(CreateUserDto userDto)
     {
-        if(await dbContext.Users.AnyAsync(u => u.Username.ToLower() == userDto.Username.ToLower()))
+        if (await dbContext.Users.AnyAsync(u => u.Username.ToLower() == userDto.Username.ToLower()))
             return Conflict("User with this username exists");
-            
+
         var created = dbContext.Users.Add(new Entities.User
         {
             Id = Guid.NewGuid(),
@@ -37,7 +37,7 @@ public class UserController : ControllerBase
         await dbContext.SaveChangesAsync();
         return Ok(created.Entity.Id);
     }
-    
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUser([FromRoute] Guid id)
     {
@@ -46,7 +46,7 @@ public class UserController : ControllerBase
             .Include(c => c.Courses)
             .FirstOrDefaultAsync();
 
-        if(userId is null)
+        if (userId is null)
             return NotFound();
         return Ok(new GetUserDto(userId));
     }
@@ -55,7 +55,7 @@ public class UserController : ControllerBase
     {
         var usersquary = dbContext.Users.AsQueryable();
 
-        if(false == string.IsNullOrWhiteSpace(search))
+        if (false == string.IsNullOrWhiteSpace(search))
             usersquary = usersquary.Where(i =>
             i.Fullname.ToLower().Contains(search.ToLower()) ||
             i.Username.ToLower().Contains(search.ToLower()));
@@ -68,32 +68,34 @@ public class UserController : ControllerBase
         return Ok(users);
     }
     [HttpPut]
-    public async Task<IActionResult> UpdateUser([FromRoute]Guid id, UpdateUserDto userDto)
+    public async Task<IActionResult> UpdateUser([FromRoute] Guid id, UpdateUserDto userDto)
     {
         var user = await dbContext.Users
             .FirstOrDefaultAsync(u => u.Id == id);
-        if(user is null)
+        if (user is null)
             return NotFound();
-        if(await dbContext.Users.AnyAsync(u => u.Username.ToLower() == user.Username.ToLower()))
+        if (await dbContext.Users.AnyAsync(u => u.Username.ToLower() == user.Username.ToLower()))
             return Conflict("User with this username exists");
         user.Fullname = userDto.Fullname;
         user.Username = userDto.Username;
         user.PhoneNumber = userDto.PhoneNumber;
         user.Age = userDto.Age;
         user.Location = userDto.Location;
-        
+
         await dbContext.SaveChangesAsync();
         return Ok(user.Id);
-    } 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteUser([FromRoute]Guid id)
-    {    
-        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
-        if(user is null) 
-            return BadRequest("User not found");
-        dbContext.Users.Remove(user);
+    }
 
-        dbContext.SaveChanges();
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteUser([FromRoute] Guid id)
+    {
+        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
+        if (user is null)
+            return NotFound();
+
+        dbContext.Users.Remove(user);
+        await dbContext.SaveChangesAsync();
+
         return Ok();
     }
 }
