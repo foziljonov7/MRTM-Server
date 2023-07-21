@@ -19,7 +19,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateUser(CreateUserDto userDto, GetCourseDto courseDto)
+    public async Task<IActionResult> CreateUser(CreateUserDto userDto)
     {
         if(await dbContext.Users.AnyAsync(u => u.Username.ToLower() == userDto.Username.ToLower()))
             return Conflict("User with this username exists");

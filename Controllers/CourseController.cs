@@ -58,7 +58,7 @@ public class CourseController : ControllerBase
         return Ok(courses);
     }
     [HttpPut]
-    public async Task<IActionResult> Update([FromBody] Guid id, UpdateCourseDto updateCourse)
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCourseDto updateCourse)
     {
         var course = await dbContext.Courses
             .FirstOrDefaultAsync(c => c.Id == id);

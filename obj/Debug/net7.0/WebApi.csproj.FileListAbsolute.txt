@@ -35,3 +35,8 @@ C:\Users\abdul\net-exclusive\WebApi\obj\Debug\net7.0\refint\WebApi.dll
 C:\Users\abdul\net-exclusive\WebApi\obj\Debug\net7.0\WebApi.pdb
 C:\Users\abdul\net-exclusive\WebApi\obj\Debug\net7.0\WebApi.genruntimeconfig.cache
 C:\Users\abdul\net-exclusive\WebApi\obj\Debug\net7.0\ref\WebApi.dll
+C:\Users\abdul\net-exclusive\WebApi\bin\Debug\net7.0\Microsoft.OpenApi.dll
+C:\Users\abdul\net-exclusive\WebApi\bin\Debug\net7.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\abdul\net-exclusive\WebApi\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\abdul\net-exclusive\WebApi\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\abdul\net-exclusive\WebApi\obj\Debug\net7.0\WebApi.MvcApplicationPartsAssemblyInfo.cs
