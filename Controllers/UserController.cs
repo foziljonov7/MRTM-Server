@@ -86,7 +86,7 @@ public class UserController : ControllerBase
         return Ok(user.Id);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete]
     public async Task<IActionResult> DeleteUser([FromRoute] Guid id)
     {
         var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
