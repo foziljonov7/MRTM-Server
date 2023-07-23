@@ -17,8 +17,11 @@ public class TeacherController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(CreateTeacherDto createTeacher)
     {
-        if(await dbContext.Teachers.AnyAsync(t => t.Fullname.ToLower() == createTeacher.Fullname.ToLower()))
+        if (await dbContext.Teachers.AnyAsync(t => t.Fullname.ToLower() == createTeacher.Fullname.ToLower()))
             return BadRequest("Teacher with this Fullname exists");
+
+        if (await dbContext.Teachers.AnyAsync(t => t.PhoneNumber.ToLower() == createTeacher.PhoneNumber.ToLower()))
+            return BadRequest("Teacher with this Phone number exists");
 
         var Teacher = dbContext.Teachers.Add(new Entities.Teacher
         {
@@ -30,7 +33,7 @@ public class TeacherController : ControllerBase
         });
 
         await dbContext.SaveChangesAsync();
-        return Ok(Teacher.Entity.Id); 
+        return Ok(Teacher.Entity.Id);
     }
     [HttpGet("{id}")]
     public IActionResult GetTeacher([FromRoute] Guid id)
@@ -50,25 +53,31 @@ public class TeacherController : ControllerBase
     {
         var teacaherquary = dbContext.Teachers.AsQueryable();
 
-        if(false == string.IsNullOrEmpty(search))
-            teacaherquary = teacaherquary.Where(i => 
+        if (false == string.IsNullOrEmpty(search))
+            teacaherquary = teacaherquary.Where(i =>
             i.Fullname.ToLower().Contains(search.ToLower()));
-        
+
         var teachers = await teacaherquary
             .Select(t => new GetTeacherDto(t))
             .ToListAsync();
-        
+
         return Ok(teachers);
     }
     [HttpPut]
-    public async Task<IActionResult> Update([FromRoute] Guid id,UpdateTeacherDto updateTeacher)
+    public async Task<IActionResult> Update([FromRoute] Guid id, UpdateTeacherDto updateTeacher)
     {
         var teachers = await dbContext.Teachers
             .FirstOrDefaultAsync(t => t.Id == id);
-        if(teachers is null)
+
+        if (teachers is null)
             return NotFound();
-        if(await dbContext.Teachers.AnyAsync(t => t.Fullname.ToLower() == updateTeacher.Fullname.ToLower()))
+
+        if (await dbContext.Teachers.AnyAsync(t => t.Fullname.ToLower() == updateTeacher.Fullname.ToLower()))
             return Conflict("Teacher with this Fullname exists");
+
+        if (await dbContext.Teachers.AnyAsync(t => t.PhoneNumber.ToLower() == updateTeacher.PhoneNumber.ToLower()))
+            return Conflict("Teacher with this Phone number exists");
+
         teachers.Fullname = updateTeacher.Fullname;
         teachers.Skills = updateTeacher.Skills;
         teachers.Age = updateTeacher.Age;
@@ -82,9 +91,9 @@ public class TeacherController : ControllerBase
     {
         var teachers = await dbContext.Teachers
             .FirstOrDefaultAsync(t => t.Id == id);
-        if(teachers is null)
+        if (teachers is null)
             return NotFound();
-        
+
         dbContext.Teachers.Remove(teachers);
 
         await dbContext.SaveChangesAsync();

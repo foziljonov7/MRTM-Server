@@ -38,8 +38,10 @@ public class CourseController : ControllerBase
         var courseId = await dbContext.Courses
             .Where(c => c.Id == id)
             .FirstOrDefaultAsync();
+
         if(courseId is null)
             return NotFound();
+            
         return Ok(new GetCourseDto(courseId));
     }
     [HttpGet]
